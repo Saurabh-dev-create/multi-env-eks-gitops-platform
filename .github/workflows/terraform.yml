@@ -11,9 +11,8 @@ jobs:
     name: Terraform Workflow
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: terraform/envs/dev
+    env:
+      TF_LOG: INFO
 
     steps:
       - name: Checkout code
@@ -24,6 +23,7 @@ jobs:
 
       - name: Terraform Version
         run: terraform version
+        working-directory: terraform/envs/dev
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v5
@@ -34,15 +34,19 @@ jobs:
 
       - name: Terraform Init
         run: terraform init -input=false
+        working-directory: terraform/envs/dev
 
       - name: Terraform Validate
         run: terraform validate
+        working-directory: terraform/envs/dev
 
       - name: Terraform Plan
         if: github.event_name == 'pull_request'
-        run: terraform plan -no-color || true
+        run: terraform plan -no-color
+        working-directory: terraform/envs/dev
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve -parallelism=1
+        working-directory: terraform/envs/dev
 
