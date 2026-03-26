@@ -1,0 +1,9 @@
+# Adding Large and Important Files here
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+
+# Sensitive files
+*.tfvars
